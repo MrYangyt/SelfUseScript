@@ -11,7 +11,6 @@
 '''
 # here put the import lib
 
-#!/bin/bash
 yum install wget telnet vim lrzsz -y
 #Yum源更换为国内阿里源
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
