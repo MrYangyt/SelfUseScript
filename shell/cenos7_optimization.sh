@@ -11,7 +11,7 @@
 '''
 # here put the import lib
 
-yum install wget telnet vim lrzsz -y
+yum install wget telnet vim lrzsz jq curl -y
 #Yum源更换为国内阿里源
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
 wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
@@ -37,6 +37,14 @@ set termencoding=utf-8
 set encoding=utf-8
 syntax on
 set number
+EOF
+#修改history
+cat >> /etc/profile << EOF
+USER_IP=`who -u am i 2>/dev/null| awk '{print $NF}'|sed -e 's/[()]//g'`
+export HISTTIMEFORMAT="[%F %T] [`whoami`] [${USER_IP}] "
+export HISTCONTROL=ignoredups:erasedups
+export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
+shopt -s histappend
 EOF
 #修改字符集
 sed -i 's/LANG="en_US.UTF-8"/LANG="zh_CN.UTF-8"/' /etc/locale.conf
@@ -127,6 +135,7 @@ systemctl stop firewalld.service
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
 setenforce 0
 #
+source /etc/profile
 echo ""
 echo -e "\033[31m本次优化结束,将在5秒后进行重启服务器，请注意\033[0m"
 sleep 5s
